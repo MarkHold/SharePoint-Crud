@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "broadcastand-messages-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/broadcastandMessages/BroadcastandMessagesWebPart.js",
+          "manifest": "./src/webparts/broadcastandMessages/BroadcastandMessagesWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "BroadcastandMessagesWebPartStrings": "lib/webparts/broadcastandMessages/loc/{locale}.js"
+  }
+}
