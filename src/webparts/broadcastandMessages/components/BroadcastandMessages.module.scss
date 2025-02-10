@@ -4,35 +4,6 @@
   align-items: stretch; /* Stretch items to have equal height */
   flex-wrap: wrap;
   gap: 10px; /* Use gap for consistent spacing */
-  position: relative; /* So we can position elements within if needed */
-}
-
-/* 
-  A row at the top to hold a heading/title on the left 
-  and a "New Item" button on the right 
-*/
-.accordion-header-row {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-/* The "New Item" button in the top-right corner */
-.new-item-button {
-  background-color: #0078d4;
-  color: #ffffff;
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: 3px;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #005a9e; /* Darken on hover */
-  }
 }
 
 /* Individual accordion tabs */
@@ -94,6 +65,7 @@
   font-size: 1em;
 }
 
+
 /* Content of each accordion tab */
 .accordion-content {
   background-color: #ffffff;
@@ -112,7 +84,6 @@
   max-height: 800px;
   padding: 30px; /* Ensures padding is fully applied when expanded */
 }
-
 /* Icon styles */
 .accordion-icon {
   flex-shrink: 0; /* Prevent icon from shrinking */
@@ -150,10 +121,12 @@
   text-align: center; /* Centers text within the full width */
 }
 
+
 /* Add some margin to separate the dates and dash */
 .accordion-dates span {
   margin: 0 5px; /* Adds space on both sides of the dash */
 }
+
 
 /* Container to stack title and dates vertically */
 .accordion-title-container {
@@ -163,41 +136,9 @@
   width: 100%; /* Ensure it takes the full width */
 }
 
+/* Dates container under the title */
 .accordion-dates {
   font-size: 0.9em; /* Adjust font size if needed */
   color: #666666; /* Optional: lighter color for dates */
   margin-top: 3px; /* Space between title and dates */
-}
-
-/* Modal overlay covering the entire screen */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent background */
-  z-index: 999; /* place it above other elements */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* The modal pop-up content */
-.modal-content {
-  position: relative;
-  width: 400px;
-  max-width: 90%;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-}
-
-/* The close (X) button in the top-right corner of the modal */
-.modal-close {
-  position: absolute;
-  right: 15px;
-  top: 10px;
-  font-size: 24px;
-  cursor: pointer;
 }
