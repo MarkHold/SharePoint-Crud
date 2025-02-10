@@ -6,13 +6,14 @@ export interface FAQListItem {
   Title: string;
   Category: string;
   // change to Additional_x0020_Contact_x0028_s when publishing
-  Additional_x0020_Contact: {
+  Additional_x0020_Contact_x0028_s: {
     Title: string;
     ID: string;
     EMail: string;
   };
   Listplace: string;
-  ITSM_x0020_number: string;
+  // change to Additional_x0020_Contact_x0028_s when publishing
+  ITSMnumber: string;
   To_x0020_Date: string;
   From_x0020_Date: string;
   Description: string;
@@ -26,7 +27,11 @@ export const getFAQItems = async (sp: SPFI) => {
   // Create a Web instance combining sp.web with the Site URL
   const web = Web([sp.web, SiteURL]);
 
-  const now = new Date().toISOString();
+  //const now = new Date().toISOString();
+
+  const today = new Date();
+  today.setDate(today.getDate() - 2);
+  const now = today.toISOString();
 
   // Utility function to format dates as "YYYY-MM-DD HH:MM"
   const formatDate = (dateString: string): string => {
@@ -44,22 +49,21 @@ export const getFAQItems = async (sp: SPFI) => {
   // Retrieve the FAQ items from the list using a filter on To_x0020_Date and Listplace
   const items: FAQListItem[] = await web.lists
     .getByTitle(ListName)
-    .items
-    .filter(`To_x0020_Date ge datetime'${now}' and Listplace eq 'Open'`)
+    .items.filter(`To_x0020_Date ge datetime'${now}' and Listplace eq 'Open'`)
     .select(
       "ID",
       "Title",
       "Category",
       "Description",
       "Targetgroup",
-      "Additional_x0020_Contact",
-      "Additional_x0020_Contact/EMail",
-      "ITSM_x0020_number",
+      "Additional_x0020_Contact_x0028_s",
+      "Additional_x0020_Contact_x0028_s/EMail",
+      "ITSMnumber",
       "To_x0020_Date",
       "From_x0020_Date",
       "Listplace"
     )
-    .expand("Additional_x0020_Contact")();
+    .expand("Additional_x0020_Contact_x0028_s")();
 
   console.log(items);
 

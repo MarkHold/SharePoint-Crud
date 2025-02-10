@@ -46,12 +46,19 @@ const Faq = (props: IBroadcastandMessagesProps) => {
         ok so for groups, I will start with the AD group then whats gonna be in SharePoint:
 
         PN-SE-SharePoint      :       Postnord Sweden
+
         PN-NO-SharePoint              Postnord Norway
+
         PN-DK-SharePoint              Postnord Denmark
+
         PN-FI-SharePoint              Postnord Finland
+
         PN-SF-SharePoint              Postnord Stral Fors
+
         PN-GR-SharePoint              Postnord Group Function
+
         PN-GLOBAL-SharePoint          All Employees at Postnord
+
       */
     });
   }, []);
@@ -113,13 +120,16 @@ const FaqItem = (props: {
 
   return (
     <div
-      className={`${styles["accordion-tab"]} ${isFullWidth ? styles.fullWidth : ""} ${isOpen ? styles.active : ""}`}
+      className={`${styles["accordion-tab"]} ${
+        isFullWidth ? styles.fullWidth : ""
+      } ${isOpen ? styles.active : ""}`}
     >
       <div className={styles["accordion-header"]} onClick={onClick}>
         <div className={styles["accordion-title-container"]}>
           <strong className={styles["accordion-title"]}>{faqItem.Title}</strong>
           <div className={styles["accordion-dates"]}>
-            {/* You can add date or additional information here */}
+            <span>{faqItem.From_x0020_Date}</span> -{" "}
+            <span>{faqItem.To_x0020_Date}</span>
           </div>
         </div>
         <span className={styles["accordion-icon"]}>
@@ -138,7 +148,33 @@ const FaqItem = (props: {
           transition: "height 0.5s ease-in-out",
         }}
       >
-        {faqItem.Description ? <p>{faqItem.Description}</p> : null}
+        {faqItem.Description ? (
+          <div dangerouslySetInnerHTML={{ __html: faqItem.Description }} />
+        ) : null}
+
+        <div className={styles["accordion-row"]}>
+          {faqItem.Additional_x0020_Contact_x0028_s?.EMail ? (
+            <p>
+              <strong style={{ fontSize: "1.1em" }}>
+                {"Contact Person: "}
+              </strong>
+              {faqItem.Additional_x0020_Contact_x0028_s?.EMail}
+            </p>
+          ) : undefined}
+
+          {faqItem.ITSMnumber ? (
+            <p>
+              {"ITSM Number: "} {faqItem.ITSMnumber}
+            </p>
+          ) : undefined}
+          <a
+            href={`https://postnord.sharepoint.com/sites/pn-broadcast/Lists/NSDTasks/DispForm.aspx?ID=${faqItem.ID}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read more
+          </a>
+        </div>
       </div>
     </div>
   );
