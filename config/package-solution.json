@@ -3,7 +3,7 @@
   "solution": {
     "name": "pn-broadcastmessagesandchanges",
     "id": "af781849-f34d-4202-b8cb-4cbab472bc0e",
-    "version": "1.0.0.8",
+    "version": "1.0.1.2",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,

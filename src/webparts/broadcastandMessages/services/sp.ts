@@ -4,77 +4,91 @@ import { Web } from "@pnp/sp/webs";
 export interface FAQListItem {
   ID: string;
   Title: string;
-  Category: string;
-  // change to Additional_x0020_Contact_x0028_s when publishing
-  Additional_x0020_Contact_x0028_s: {
-    Title: string;
-    ID: string;
-    EMail: string;
-  };
-  Listplace: string;
-  // change to Additional_x0020_Contact_x0028_s when publishing
+  Status: string;
   ITSMnumber: string;
   To_x0020_Date: string;
   From_x0020_Date: string;
   Description: string;
   Targetgroup: string[] | undefined;
+  ListSource: string; // <-- New property
 }
 
-const SiteURL = "https://postnord.sharepoint.com/sites/pn-broadcast";
-const ListName = "NSDTasks";
+const SiteURL =
+  "https://postnord.sharepoint.com/sites/pn-broadcast-testenvironment";
+
+const LISTS = {
+  Changes: "Changes",
+  ServiceMessages: "Service Messages",
+};
 
 export const getFAQItems = async (sp: SPFI) => {
-  // Create a Web instance combining sp.web with the Site URL
   const web = Web([sp.web, SiteURL]);
 
-  //const now = new Date().toISOString();
-
+  // Example offset of 2 days
   const today = new Date();
   today.setDate(today.getDate() - 2);
   const now = today.toISOString();
 
-  // Utility function to format dates as "YYYY-MM-DD HH:MM"
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
-
     const year = date.getFullYear();
     const month = (date.getMonth() + 1 < 10 ? "0" : "") + (date.getMonth() + 1);
     const day = (date.getDate() < 10 ? "0" : "") + date.getDate();
     const hours = (date.getHours() < 10 ? "0" : "") + date.getHours();
     const minutes = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
-
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
-  // Retrieve the FAQ items from the list using a filter on To_x0020_Date and Listplace
-  const items: FAQListItem[] = await web.lists
-    .getByTitle(ListName)
-    .items.filter(`To_x0020_Date ge datetime'${now}' and Listplace eq 'Open'`)
+  const filterQuery = `To_x0020_Date ge datetime'${now}' and Status eq 'Open'`;
+
+  // Fetch Changes items
+  const changesItems: FAQListItem[] = await web.lists
+    .getByTitle(LISTS.Changes)
+    .items.filter(filterQuery)
     .select(
       "ID",
       "Title",
-      "Category",
       "Description",
       "Targetgroup",
-      "Additional_x0020_Contact_x0028_s",
-      "Additional_x0020_Contact_x0028_s/EMail",
       "ITSMnumber",
       "To_x0020_Date",
       "From_x0020_Date",
-      "Listplace"
-    )
-    .expand("Additional_x0020_Contact_x0028_s")();
+      "Status"
+    )();
 
-  console.log(items);
+  // Fetch Service Messages items
+  const serviceMessagesItems: FAQListItem[] = await web.lists
+    .getByTitle(LISTS.ServiceMessages)
+    .items.filter(filterQuery)
+    .select(
+      "ID",
+      "Title",
+      "Description",
+      "Targetgroup",
+      "ITSMnumber",
+      "To_x0020_Date",
+      "From_x0020_Date",
+      "Status"
+    )();
 
-  return items.map((item) => {
-    return {
-      ...item,
-      From_x0020_Date: formatDate(item.From_x0020_Date),
-      To_x0020_Date: formatDate(item.To_x0020_Date),
-      Targetgroup: item.Targetgroup?.map((groupname) => {
-        return groupname.toLocaleLowerCase();
-      }),
-    };
-  });
+  // Tag each item with its source list
+  const taggedChangesItems = changesItems.map((item) => ({
+    ...item,
+    ListSource: LISTS.Changes,
+    From_x0020_Date: formatDate(item.From_x0020_Date),
+    To_x0020_Date: formatDate(item.To_x0020_Date),
+    Targetgroup: item.Targetgroup?.map((g) => g.toLocaleLowerCase()),
+  }));
+
+  const taggedServiceMessagesItems = serviceMessagesItems.map((item) => ({
+    ...item,
+    ListSource: LISTS.ServiceMessages,
+    From_x0020_Date: formatDate(item.From_x0020_Date),
+    To_x0020_Date: formatDate(item.To_x0020_Date),
+    Targetgroup: item.Targetgroup?.map((g) => g.toLocaleLowerCase()),
+  }));
+
+  // Combine them
+  const combinedItems = [...taggedChangesItems, ...taggedServiceMessagesItems];
+  return combinedItems;
 };

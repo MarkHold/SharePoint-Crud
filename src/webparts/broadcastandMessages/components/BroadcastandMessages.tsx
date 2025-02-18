@@ -153,22 +153,13 @@ const FaqItem = (props: {
         ) : null}
 
         <div className={styles["accordion-row"]}>
-          {faqItem.Additional_x0020_Contact_x0028_s?.EMail ? (
-            <p>
-              <strong style={{ fontSize: "1.1em" }}>
-                {"Contact Person: "}
-              </strong>
-              {faqItem.Additional_x0020_Contact_x0028_s?.EMail}
-            </p>
-          ) : undefined}
-
           {faqItem.ITSMnumber ? (
             <p>
               {"ITSM Number: "} {faqItem.ITSMnumber}
             </p>
           ) : undefined}
           <a
-            href={`https://postnord.sharepoint.com/sites/pn-broadcast/Lists/NSDTasks/DispForm.aspx?ID=${faqItem.ID}`}
+            href={`https://postnord.sharepoint.com/sites/pn-broadcast-testenvironment/Lists/${faqItem.ListSource}/DispForm.aspx?ID=${faqItem.ID}`}
             target="_blank"
             rel="noopener noreferrer"
           >
